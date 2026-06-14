@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WordSolver Analytics Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      padding: 2rem;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 500;
+    }
+    
+    button {
+      padding: 8px 16px;
+      font-size: 13px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    button:hover {
+      background-color: #f5f5f5;
+      border-color: #999;
+    }
+    
+    .setup-section {
+      display: none;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .setup-section.active {
+      display: block;
+    }
+    
+    .setup-section p {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: monospace;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #185FA5;
+      box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.1);
+    }
+    
+    .btn-save {
+      width: 100%;
+      padding: 10px;
+      background: #185FA5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+    
+    .btn-save:hover {
+      background: #0C447C;
+    }
+    
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      margin-bottom: 2rem;
+    }
+    
+    .metric-card {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 1.25rem;
+      border: 1px solid #f0f0f0;
+    }
+    
+    .metric-label {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: #185FA5;
+      margin-bottom: 4px;
+    }
+    
+    .metric-sublabel {
+      font-size: 11px;
+      color: #bbb;
+    }
+    
+    #chartContainer {
+      display: none;
+      margin-bottom: 2rem;
+    }
+    
+    #chartContainer.active {
+      display: block;
+    }
+    
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      height: 320px;
+    }
+    
+    .status-text {
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+      }
+      
+      .container {
+        background: #2a2a2a;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      }
+      
+      input[type="text"] {
+        background: #333;
+        color: #e0e0e0;
+        border-color: #444;
+      }
+      
+      input[type="text"]:focus {
+        border-color: #185FA5;
+        box-shadow: 0 0 0 3px rgba(24, 95, 165, 0.2);
+      }
+      
+      button {
+        background: #333;
+        color: #e0e0e0;
+        border-color: #444;
+      }
+      
+      button:hover {
+        background-color: #444;
+        border-color: #666;
+      }
+      
+      .setup-section {
+        background: #333;
+        border-color: #444;
+      }
+      
+      .metric-card {
+        background: #333;
+        border-color: #444;
+      }
+      
+      .metric-label {
+        color: #999;
+      }
+      
+      .metric-sublabel {
+        color: #666;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>WordSolver Analytics</h1>
+      <button onclick="toggleSetup()">⚙️ Setup</button>
+    </div>
+    
+    <div id="setupSection" class="setup-section" style="display: none;">
+      <p>Supabase anon key (optional override)</p>
+      <input type="text" id="anonKeyInput" placeholder="Paste new anon key to change">
+      <button class="btn-save" onclick="saveSetup()">Update & Reload</button>
+    </div>
+    
+    <div class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Live users</div>
+        <div class="metric-value" id="liveCount">—</div>
+        <div class="metric-sublabel">Last 5 min</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Total visits</div>
+        <div class="metric-value" id="totalCount">—</div>
+        <div class="metric-sublabel">All time</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">Today</div>
+        <div class="metric-value" id="todayCount">—</div>
+        <div class="metric-sublabel">Last 24h</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">This week</div>
+        <div class="metric-value" id="weekCount">—</div>
+        <div class="metric-sublabel">Last 7 days</div>
+      </div>
+    </div>
+    
+    <div id="chartContainer">
+      <div class="chart-wrapper">
+        <canvas id="trendChart" role="img" aria-label="WordSolver daily visits trend"></canvas>
+      </div>
+    </div>
+    
+    <p class="status-text" id="statusText">Configure anon key to start</p>
+  </div>
+  
+  <script>
+    let chart = null;
+    let anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qbmlnaGVnZ3h0eXRoeXRzcWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzYwMDcsImV4cCI6MjA5NTY1MjAwN30.mh1psePuKeQ8SH5uita7BsUKd6wd5IwHVVlDmJCMA0Q';
+    
+    function toggleSetup() {
+      const section = document.getElementById('setupSection');
+      section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function saveSetup() {
+      const newKey = document.getElementById('anonKeyInput').value.trim();
+      if (!newKey) {
+        alert('Please enter your anon key');
+        return;
+      }
+      anonKey = newKey;
+      document.getElementById('setupSection').style.display = 'none';
+      loadAnalytics();
+    }
+    
+    async function loadAnalytics() {
+      if (!anonKey) {
+        alert('Please configure your anon key first');
+        return;
+      }
+      
+      document.getElementById('liveCount').textContent = 'Loading...';
+      document.getElementById('totalCount').textContent = 'Loading...';
+      document.getElementById('todayCount').textContent = 'Loading...';
+      document.getElementById('weekCount').textContent = 'Loading...';
+      document.getElementById('statusText').textContent = 'Fetching data...';
+      
+      try {
+        const baseUrl = 'https://mjnigheggxtythytsqle.supabase.co/rest/v1';
+        const headers = {
+          'Authorization': `Bearer ${anonKey}`,
+          'apikey': anonKey,
+          'Content-Type': 'application/json'
+        };
+        
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60000).toISOString();
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60000).toISOString();
+        
+        const live = await fetch(`${baseUrl}/wordsolver_visit?created_at=gte.${fiveMinutesAgo}`, { headers }).then(r => r.json());
+        const total = await fetch(`${baseUrl}/wordsolver_visit?select=count`, { headers }).then(r => r.json());
+        const dailyData = await fetch(`${baseUrl}/wordsolver_visit?created_at=gte.${today}&select=created_at`, { headers }).then(r => r.json());
+        const weekData = await fetch(`${baseUrl}/wordsolver_visit?created_at=gte.${sevenDaysAgo}&select=created_at`, { headers }).then(r => r.json());
+        
+        document.getElementById('liveCount').textContent = Math.round(live.length || 0);
+        document.getElementById('totalCount').textContent = Math.round(total[0]?.count || 0).toLocaleString();
+        document.getElementById('todayCount').textContent = Math.round(dailyData.length || 0);
+        document.getElementById('weekCount').textContent = Math.round(weekData.length || 0);
+        
+        const dailyByDate = {};
+        weekData.forEach(row => {
+          const date = new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          dailyByDate[date] = (dailyByDate[date] || 0) + 1;
+        });
+        
+        const last7Days = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now.getTime() - i * 24 * 60 * 60000);
+          const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          last7Days.push(dateStr);
+        }
+        
+        const counts = last7Days.map(d => Math.round(dailyByDate[d] || 0));
+        
+        document.getElementById('chartContainer').classList.add('active');
+        document.getElementById('statusText').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+        
+        if (chart) chart.destroy();
+        chart = new Chart(document.getElementById('trendChart'), {
+          type: 'line',
+          data: {
+            labels: last7Days,
+            datasets: [{
+              label: 'Daily visits',
+              data: counts,
+              borderColor: '#185FA5',
+              backgroundColor: 'rgba(24, 95, 165, 0.05)',
+              tension: 0.3,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: '#185FA5',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+        
+      } catch (err) {
+        document.getElementById('statusText').textContent = 'Error: ' + (err.message || 'Failed to load');
+        console.error(err);
+      }
+    }
+    
+    if (anonKey) {
+      setTimeout(loadAnalytics, 500);
+    }
+  </script>
+</body>
+</html>
