@@ -9,13 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 
-<!-- Google Analytics - replace G-8WM1MQ74ZP with your ID --> 
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8WM1MQ74ZP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-8WM1MQ74ZP');</script>
-
-<!-- Media.net - replace XXXXXXX with your site ID after signup at media.net -->
-<script>window._mNHandle=window._mNHandle||{};window._mNHandle.queue=window._mNHandle.queue||[];</script>
-<script async src="https://contextual.media.net/dmedianet.js?cid=XXXXXXX"></script>
 
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9700227474442026" crossorigin="anonymous"></script>
@@ -744,5 +740,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </script>
 <div class="activity-toast" id="activity-toast"></div>
+
+<!-- Supabase visit tracking -->
+<script>
+async function trackVisit() {
+  try {
+    await fetch('https://mjnigheggxtythytsqle.supabase.co/rest/v1/wordsolver_visit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qbmlnaGVnZ3h0eXRoeXRzcWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNzYwMDcsImV4cCI6MjA5NTY1MjAwN30.mh1psePuKeQ8SH5uita7BsUKd6wd5IwHVVlDmJCMA0Q'
+      },
+      body: JSON.stringify({
+        user_agent: navigator.userAgent
+      })
+    });
+  } catch (err) {
+    console.error('Visit tracking error:', err);
+  }
+}
+trackVisit();
+</script>
+
 </body>
 </html>
