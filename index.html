@@ -216,16 +216,17 @@ body.night .affiliate-bar { background:linear-gradient(135deg,#1e1a0e,#2a2310); 
       <div class="logo">Word Unscrambler</div>
       <div class="title">WordSolver</div>
     </div>
+    <button class="theme-toggle" id="theme-toggle" type="button" onclick="toggleTheme()">🌙 Night</button>
     </div>
   <div class="subtitle" id="subtitle">Find every word hidden in your letters</div>
 
   <div class="input-card">
     <div class="input-label" id="input-label">Your letters</div>
-    <input class="letter-input" id="letters" type="text" placeholder="e.g. AELRST" maxlength="15" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
+    <input class="letter-input" id="letters" type="text" placeholder="e.g. AELRST" maxlength="15" autocomplete="off" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z]/g,'')" autocorrect="off" autocapitalize="characters" spellcheck="false"/>
     <div class="divider"></div>
     <div class="input-actions">
-      <button class="btn-primary" id="btn-reveal" onclick="unscramble()">Find Words</button>
-      <button class="btn-clear" onclick="clearAll()">✕</button>
+      <button class="btn-primary" id="btn-reveal" type="button" onclick="unscramble()">Find Words</button>
+      <button class="btn-clear" type="button" onclick="clearAll()">✕</button>
     </div>
     <!-- Filter toggle — only visible after letters typed -->
     <div class="filter-toggle-row" id="filter-toggle-row">
@@ -264,7 +265,6 @@ body.night .affiliate-bar { background:linear-gradient(135deg,#1e1a0e,#2a2310); 
   </div>
   <!-- Ad placement — shown below results after approval -->
   <div id="wordsolver-top" class="ad-banner" style="margin-bottom:12px;"></div>
-  <script>try{window._mNHandle.queue.push(function(){window._mNDetails.loadTag("XXXXXXX","728x90","wordsolver-top");});}catch(e){}</script>
 
   <a class="affiliate-bar" id="affiliate-bar" href="https://www.amazon.com/s?k=scrabble+board+game&tag=wordsolver-20" target="_blank">
     <div><div style="font-size:13px;font-weight:600;color:var(--text);">🎲 Shop Scrabble & Word Games</div><div style="font-size:11px;color:var(--muted);margin-top:1px;">Amazon — Free shipping on orders $25+</div></div>
@@ -489,13 +489,14 @@ function wordScore(w){
   return w.split('').reduce((s,c)=>s+(SCORES[c]||0),0);
 }
 console.log('Loading dictionary...');
-const WORD_SET=new Set(DICT_STR.split(','));
+const WORD_SET=new Set(DICT_STR.split(',').filter(Boolean));
 console.log('Ready:',WORD_SET.size,'words');
+window.WORD_SET = WORD_SET;
 let found=[],activeLen='all';
 function toggleTheme(){
   const night=document.body.classList.toggle('night');
   const btn=document.getElementById('theme-toggle');
-  btn.textContent=night?'☀️ Day':'🌙 Night';
+  if(btn) btn.textContent=night?'☀️ Day':'🌙 Night';
   try{localStorage.setItem('wc-theme',night?'night':'day');}catch(e){}
 }
 function setColor(theme, el){
@@ -519,7 +520,7 @@ function initTheme(){
   try{
     if(localStorage.getItem('wc-theme')==='night'){
       document.body.classList.add('night');
-      document.getElementById('theme-toggle').textContent='☀️ Day';
+      const themeBtn=document.getElementById('theme-toggle'); if(themeBtn) themeBtn.textContent='☀️ Day';
     }
     try{ localStorage.removeItem('wc-lang'); }catch(e){}
     const savedColor=localStorage.getItem('wc-color')||'purple';
@@ -647,7 +648,11 @@ async function showWordDetail(word){if(typeof incrementCrackCount==="function")i
   }catch(e){document.getElementById('modal-body').innerHTML='<div class="modal-loading" style="color:#f0544f;">Could not load AI insights. Check your connection.</div>';}
 }
 function closeModal(){document.getElementById('word-modal').classList.remove('open');}
-document.getElementById('letters').addEventListener('keydown',e=>{if(e.key==='Enter')unscramble();});
+const lettersInput=document.getElementById('letters');
+if(lettersInput){lettersInput.addEventListener('keydown',e=>{if(e.key==='Enter')unscramble();});}
+window.unscramble=unscramble;
+window.clearAll=clearAll;
+window.renderWords=renderWords;
 let tt;function showToast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2000);}
 
 // ── ALL INIT INSIDE DOMContentLoaded ─────────────────────────────
