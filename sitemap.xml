@@ -97,4 +97,22 @@
     <changefreq>weekly</changefreq>
   </url>
 
+<url>
+  <loc>https://wordsolver.pro/words-ending-in-er/</loc>
+  <priority>0.8</priority>
+  <changefreq>weekly</changefreq>
+</url>
+
+<url>
+  <loc>https://wordsolver.pro/words-ending-in-ly/</loc>
+  <priority>0.8</priority>
+  <changefreq>weekly</changefreq>
+</url>
+
+<url>
+  <loc>https://wordsolver.pro/words-with-x/</loc>
+  <priority>0.8</priority>
+  <changefreq>weekly</changefreq>
+</url>
+  
 </urlset>
