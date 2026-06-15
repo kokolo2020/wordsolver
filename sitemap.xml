@@ -8,6 +8,42 @@
   </url>
 
   <url>
+    <loc>https://wordsolver.pro/wordle-solver/</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/anagram-solver/</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/word-lists/</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/two-letter-words/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/three-letter-words/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/four-letter-words/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
     <loc>https://wordsolver.pro/5-letter-words/</loc>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
@@ -26,19 +62,37 @@
   </url>
 
   <url>
-    <loc>https://wordsolver.pro/wordle-solver/</loc>
-    <priority>0.9</priority>
+    <loc>https://wordsolver.pro/words-ending-in-ing/</loc>
+    <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
 
   <url>
-    <loc>https://wordsolver.pro/anagram-solver/</loc>
-    <priority>0.9</priority>
+    <loc>https://wordsolver.pro/words-ending-in-ed/</loc>
+    <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
 
   <url>
-    <loc>https://wordsolver.pro/word-lists/</loc>
+    <loc>https://wordsolver.pro/words-starting-with-un/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/words-with-q/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/words-with-z/</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://wordsolver.pro/words-with-j/</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
