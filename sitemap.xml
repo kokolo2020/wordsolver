@@ -30,4 +30,23 @@
   <url><loc>https://wordsolver.pro/words-with-z/</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
   <url><loc>https://wordsolver.pro/words-with-j/</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
 
+<url>
+  <loc>https://wordsolver.pro/about/</loc>
+  <priority>0.5</priority>
+  <changefreq>monthly</changefreq>
+</url>
+
+<url>
+  <loc>https://wordsolver.pro/privacy-policy/</loc>
+  <priority>0.5</priority>
+  <changefreq>monthly</changefreq>
+</url>
+
+<url>
+  <loc>https://wordsolver.pro/contact/</loc>
+  <priority>0.5</priority>
+  <changefreq>monthly</changefreq>
+</url>
+  
+
 </urlset>
